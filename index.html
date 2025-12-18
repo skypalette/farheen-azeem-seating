@@ -349,6 +349,25 @@
             font-style: italic;
         }
 
+        .footer-credit {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: var(--charcoal-light);
+            margin-top: 20px;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-credit a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-credit a:hover {
+            color: var(--gold-light);
+            text-decoration: underline;
+        }
+
         /* Mobile Adjustments */
         @media (max-width: 600px) {
             header {
@@ -433,6 +452,7 @@
         <footer>
             <div class="footer-ornament"></div>
             <p class="footer-text">We're so glad you're celebrating with us</p>
+            <p class="footer-credit">Hosted by <a href="https://www.skypalettetech.com/" target="_blank">Sky Palette</a> in partnership with <a href="https://luxuryeventdesign.com/" target="_blank">Luxury Events</a></p>
         </footer>
     </div>
 
