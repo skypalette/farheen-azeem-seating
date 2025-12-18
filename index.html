@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farheen & Azeem | Seating Chart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #b8860b;
+            --gold-light: #d4a843;
+            --cream: #faf8f5;
+            --cream-dark: #f0ebe3;
+            --charcoal: #2c2c2c;
+            --charcoal-light: #4a4a4a;
+            --blush: #e8d5d0;
+            --sage: #9caf88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Decorative background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(184, 134, 11, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(156, 175, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(232, 213, 208, 0.08) 0%, transparent 30%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .ornament {
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .ornament::before {
+            content: '❧';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--cream);
+            padding: 0 15px;
+            color: var(--gold);
+            font-size: 20px;
+        }
+
+        .couple-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 300;
+            color: var(--charcoal);
+            letter-spacing: 0.15em;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .couple-names .ampersand {
+            font-style: italic;
+            color: var(--gold);
+            font-weight: 400;
+            margin: 0 0.1em;
+        }
+
+        .event-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--charcoal-light);
+            margin-top: 15px;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 30px auto;
+            max-width: 600px;
+            box-shadow: 
+                0 4px 20px rgba(0,0,0,0.04),
+                0 1px 3px rgba(0,0,0,0.02);
+            border: 1px solid rgba(184, 134, 11, 0.1);
+            position: relative;
+        }
+
+        .search-section::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .search-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--charcoal);
+            font-weight: 400;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+            border: 2px solid var(--cream-dark);
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: var(--cream);
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        #searchInput:focus {
+            border-color: var(--gold);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(184, 134, 11, 0.1);
+        }
+
+        #searchInput::placeholder {
+            color: #aaa;
+            font-weight: 300;
+        }
+
+        /* Result Display */
+        .result-container {
+            margin-top: 30px;
+            min-height: 80px;
+        }
+
+        .result {
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result.found {
+            background: linear-gradient(135deg, rgba(184, 134, 11, 0.08), rgba(156, 175, 136, 0.08));
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+        }
+
+        .result-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+
+        .result-table {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 500;
+            color: var(--gold);
+            margin: 15px 0;
+            line-height: 1;
+        }
+
+        .result-table-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--charcoal-light);
+        }
+
+        .result.not-found {
+            color: var(--charcoal-light);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .multiple-results {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .multiple-result-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(184, 134, 11, 0.15);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .multiple-result-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.1);
+        }
+
+        /* All Tables Section */
+        .all-tables-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(184, 134, 11, 0.2);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--charcoal);
+            font-weight: 400;
+        }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(184, 134, 11, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .table-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            border-color: rgba(184, 134, 11, 0.2);
+        }
+
+        .table-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--cream-dark);
+            font-weight: 500;
+        }
+
+        .table-guests {
+            list-style: none;
+        }
+
+        .table-guests li {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            color: var(--charcoal-light);
+            border-bottom: 1px solid var(--cream);
+            transition: all 0.2s ease;
+        }
+
+        .table-guests li:last-child {
+            border-bottom: none;
+        }
+
+        .table-guests li:hover {
+            color: var(--charcoal);
+            padding-left: 8px;
+        }
+
+        .table-guests li.highlight {
+            background: linear-gradient(90deg, rgba(184, 134, 11, 0.1), transparent);
+            color: var(--charcoal);
+            font-weight: 500;
+            padding-left: 12px;
+            margin: 0 -15px;
+            padding-right: 15px;
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-ornament {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+            margin: 0 auto 20px;
+        }
+
+        .footer-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--charcoal-light);
+            font-style: italic;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            header {
+                padding: 40px 15px 30px;
+            }
+
+            .search-section {
+                padding: 30px 20px;
+                margin: 20px 15px;
+            }
+
+            .tables-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .result-table {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gold);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+            z-index: 100;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background: var(--gold-light);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="ornament"></div>
+            <h1 class="couple-names">
+                Farheen <span class="ampersand">&</span> Azeem
+            </h1>
+            <p class="event-subtitle">Seating Arrangements</p>
+        </header>
+
+        <section class="search-section">
+            <p class="search-label">Find Your Table</p>
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Enter your name..."
+                    autocomplete="off"
+                    autofocus
+                >
+            </div>
+            <div class="result-container" id="resultContainer"></div>
+        </section>
+
+        <section class="all-tables-section">
+            <h2 class="section-title">All Tables</h2>
+            <div class="tables-grid" id="tablesGrid"></div>
+        </section>
+
+        <footer>
+            <div class="footer-ornament"></div>
+            <p class="footer-text">We're so glad you're celebrating with us</p>
+        </footer>
+    </div>
+
+    <button class="scroll-top" id="scrollTop">↑</button>
+
+    <script>
+        const seatingData = {
+            "Table One": ["Mizanur Rahman", "Wafir Rahman", "Wahida Rahman", "Maanha Rahman", "Mahira Rahman", "Maruna Hassan", "Quazi Hassan", "Mobina Rahman", "Hafiz Rahman", "Ruma Alam", "Munir Alam", "Muhammed Alam", "Marufa Alam"],
+            "Table Two": ["Aleem Rizvon", "Lubing Fang", "Javidha Rizvon", "Kaleem Rizvon", "Matheen Asrar", "Mubeen Hamid", "Hamid Mohamad", "Imran Jeddy", "Tayyiba Shaik", "Muneeb Shaik", "Muzakkir Shakir"],
+            "Table Three": ["Alamgir Kabir", "Syeda Kabir", "Shah Rafiq", "Muhibun Nessa", "Nafis Rafiq", "Samiullah Navi", "Tasnya Rasheed", "Azima Kabir", "Ruhama Kabir"],
+            "Table Four": ["Monjur Rahim", "Sabrina Rain", "Monjur Rahim", "Farah Sultana", "Rowsan Masum", "Anwar Hossain", "Nasiha Chaklader", "Navid Chaklader", "Nasim Chaklader", "Tania Afrin"],
+            "Table Five": ["Mohammed Ahsan", "Eilza Ahsan", "Musleuddin Ahmed", "Tania Ahmed", "Sarwar Khalid", "Salma Khalid", "Sabbir Ahmed", "Syeda Ahmed", "Sharif Ahmed", "Zebunnesa Sharif"],
+            "Table Six": ["Jahid Hossain", "Rosy Hossain", "Tariqul Islam", "Nishat Naznin", "Sharif Eusufzai", "Sheuli Sharif", "Shafiqul Islam", "Rona Islam", "Altaf Hossain", "Ismat Hossain"],
+            "Table Seven": ["Ali Nur Rasheed", "Asma Ahmed", "Mamun Rashid", "Sabina Rashid", "Enamur Rasheed", "Roksana Sultana", "Shafiul Islam", "Nihar Islam"],
+            "Table Eight": ["Kavitha Ratnam", "Meethu Meyyappan", "Shyla Kishore", "Sivakami Kannappan", "Shanthi Shivakumar", "Cynthia Ponnuswamy", "Kannal Ponnuswamy", "Aruvi Rayar", "Aadhira Solomon", "Leena Perez"],
+            "Table Nine": ["Farukh Rahman", "Walker Nadeem", "Sharmeen Afreen", "Aysha Nadeem", "Russel Imran", "Sayaba Imran", "Khalid Imran", "Ehteshamul Haque", "Zahra Haque", "Tanzina Zaman"],
+            "Table Ten": ["Amol Rangdal", "Yash Rangdal", "Rhea Rangdal", "Sujatha Basawaraj", "Cynthia Amalraj", "Ryan Amalraj", "Amalraj Fernando"],
+            "Table Eleven": ["Tanwir Ahmed", "Fawzia Salamalay", "Rashad Salamalay", "Mahima Hayat", "Sameera Azin", "Yafi Azin", "Abir Rahman", "Rayan Alam", "Nihal Taj"],
+            "Table Twelve": ["Raj Chaudhuri", "Lalti Chaudhuri", "Tana Raybarman", "Simi Raybarman", "Riley Chaudhuri", "Putul Chaudhuri", "Rayan Chaudhuri", "Ron Raybarman"],
+            "Table Thirteen": ["Dalim Akhter", "Shikander Hayat", "Shanchita Akhter", "Nilofar Yasmeen", "Badul Das", "Bilkis Banu"],
+            "Table Fourteen": ["Aidah Asrar", "Manha Asrar", "Roubaina Hamid", "Fazileth Imran", "Uzayr Jeddy", "Anika Akhter", "Mohammed Ameen Soukat Ali", "Rayhaan Rizvon", "Zuhair Rizvon", "Alia Rizvon", "Amina Rizvon"],
+            "Table Fifteen": ["Nameer Rahman", "Ruhan Rahman", "Mehraz Hassan", "Alvy Jamal", "Shora Hassan", "Reesha Jooma", "Sajid Jooma", "Aaisha Toppa", "Shaneel Alam", "Shayer Hassan"],
+            "Table Sixteen": ["Vineeta Rajendran", "Adharsh Rajendran", "Navin Raju", "Harshith Dasara", "Carlos Arroyo", "Shaan Kewalramani", "Francesca Reihani"],
+            "Table Seventeen": ["Parvez Syed", "Queen Syed", "Anha Syed", "Ehaam Syed", "Shaian Syed", "Mayela Reezvi", "Yahtasham Reezvi", "Rezwan Siraj", "Marina Siraj", "Jahangir Siraj"],
+            "Table Eighteen": ["Amirul Islam", "Jamila Islam", "Yasmin Hossain", "Nasrul Hossain", "Asadul Haq", "Rezwana Haq", "Rakib Uddin", "Umme Uddin", "Ahmadul Hassan", "Amena Hassan"],
+            "Table Nineteen": ["Rebecca Ruby Richardson", "Sherin Richardson", "Nashia Rahman", "Chris Neuhoff", "Rishi Ghanti", "Apoorva Neeli", "Mauli Shah", "Richa Patel", "Tatiana Gonzalez", "Esther Na"],
+            "Table Twenty": ["Nikita Agarwal", "Sunny Korsapati", "Anshu Rao", "Aaron Jabir", "Bisma Jabir", "Aleena Abbas", "Jaffer Abbas", "Derrick Ogola", "Visakh Madathil", "Sandra Kumar"],
+            "Table Twenty One": ["Omaima Rafiuddin", "Abrar Rafiuddin", "Omar Alkhatib", "Darrion Randolph", "Ali Toppa", "Tayiba Toppa", "Saif Toppa", "Syed Rafiuddin", "Aisha Rafiuddin", "Tabarak Mian", "Hanan Rafiuddin"],
+            "Table Twenty Two": ["Anis Islam", "Naila Islam", "Baursha Khan", "Brishty Khan", "Ishan Deolankar", "Rohan Deolankar", "Samsul Alam", "Samantha Alam", "Alam Muhammad", "Farzana Alam"],
+            "Table Twenty Three": ["Farha Shaikh", "Kruthi Krishnachaitanya", "Maha Ali", "Rima Desai", "Kylar Bailey", "Tahesin Asgar", "Zoar Guadarrama", "Kyndall White", "John Edwards"],
+            "Table Twenty Four": ["Sarah Sheikh", "Zuhair Sheikh", "Ankit Nanda", "Adam Viegas", "Akhil Gupta", "Sonali Mucherla", "Krishna Sigireddy", "Pratha Aggarwal"],
+            "Table Twenty Five": ["Sania Mehdi", "Mamun Mehdi", "Nora Mehdi", "Ryan Siddique", "Shirin Siddique", "Shushmee Rahman", "Fazal Rahman", "Mita Rahman", "Asmat Ferdous", "Geeta Datta", "Tuni Datta"],
+            "Table Twenty Six": ["Susmita Sultana", "Mohammed Salim", "Afroza Hoque", "Ahsan Mazumdar", "Sharmeen Mazumdar", "Rowsha Mazumdar", "Enayet Khan", "Wahida Rahman", "Azizur Rahman", "Farida Akhter"],
+            "Table Twenty Seven": ["Aqil Jooma", "Naeem Muscatwalla", "Sehar Hooda", "Faheem Dharamsi", "Aliya Kerawala", "Amin Kerawala", "Azfar Valliani", "Hussain Arab", "Niha Arab", "Unzila Arab", "Ali Janmohammad"],
+            "Table Twenty Eight": ["Laila Sultana", "Rizia Wazed", "Abdul Wazed", "Reza Kabir", "Sadia Reza", "Abuzafar Bashet", "Shamee Rahman", "Mujib Khan", "Shireen Khan", "Nahar Ahmed"],
+            "Table Twenty Nine": ["Salim Jooma", "Amy Jooma", "Dada Jooma", "Dadi Jooma", "Aziz Muscatwalla", "Almas Muscatwalla", "Raju Kerawala", "Jameela Kerawala"],
+            "Table Thirty": ["Wahid Chowdhury", "Daisy Chowdhury", "Farzana Siddiqua", "Jahanara Khanam", "Ahsan Riffat", "Nabila Riffat", "Aziz Ahmed", "Rini Ahmed", "Mujibul Haque", "Ruby Afroz"]
+        };
+
+        // Build guest lookup
+        const guestLookup = {};
+        for (const [table, guests] of Object.entries(seatingData)) {
+            guests.forEach(guest => {
+                const key = guest.toLowerCase();
+                if (!guestLookup[key]) {
+                    guestLookup[key] = [];
+                }
+                guestLookup[key].push({ name: guest, table: table });
+            });
+        }
+
+        // Render all tables
+        function renderAllTables() {
+            const grid = document.getElementById('tablesGrid');
+            grid.innerHTML = '';
+
+            for (const [table, guests] of Object.entries(seatingData)) {
+                const card = document.createElement('div');
+                card.className = 'table-card';
+                card.innerHTML = `
+                    <h3 class="table-number">${table}</h3>
+                    <ul class="table-guests">
+                        ${guests.map(g => `<li data-name="${g.toLowerCase()}">${g}</li>`).join('')}
+                    </ul>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        // Search functionality
+        function searchGuest(query) {
+            const container = document.getElementById('resultContainer');
+            query = query.trim().toLowerCase();
+
+            if (!query) {
+                container.innerHTML = '';
+                clearHighlights();
+                return;
+            }
+
+            const matches = [];
+            for (const [key, entries] of Object.entries(guestLookup)) {
+                if (key.includes(query)) {
+                    entries.forEach(entry => matches.push(entry));
+                }
+            }
+
+            // Remove duplicates
+            const unique = [];
+            const seen = new Set();
+            matches.forEach(m => {
+                const id = m.name + m.table;
+                if (!seen.has(id)) {
+                    seen.add(id);
+                    unique.push(m);
+                }
+            });
+
+            clearHighlights();
+
+            if (unique.length === 0) {
+                container.innerHTML = `
+                    <div class="result not-found">
+                        No guest found matching "${query}".<br>
+                        <small>Try searching by first or last name.</small>
+                    </div>
+                `;
+            } else if (unique.length === 1) {
+                const match = unique[0];
+                container.innerHTML = `
+                    <div class="result found">
+                        <p class="result-name">${match.name}</p>
+                        <p class="result-table-label">Your table</p>
+                        <p class="result-table">${match.table.replace('Table ', '')}</p>
+                    </div>
+                `;
+                highlightGuest(match.name.toLowerCase());
+            } else {
+                container.innerHTML = `
+                    <div class="result multiple-results">
+                        ${unique.map(m => `
+                            <div class="multiple-result-item" onclick="selectGuest('${m.name}', '${m.table}')">
+                                <span class="result-name">${m.name}</span>
+                                <span class="result-table-label"> — ${m.table}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                unique.forEach(m => highlightGuest(m.name.toLowerCase()));
+            }
+        }
+
+        function selectGuest(name, table) {
+            document.getElementById('resultContainer').innerHTML = `
+                <div class="result found">
+                    <p class="result-name">${name}</p>
+                    <p class="result-table-label">Your table</p>
+                    <p class="result-table">${table.replace('Table ', '')}</p>
+                </div>
+            `;
+            clearHighlights();
+            highlightGuest(name.toLowerCase());
+        }
+
+        function highlightGuest(name) {
+            document.querySelectorAll(`.table-guests li[data-name="${name}"]`).forEach(el => {
+                el.classList.add('highlight');
+            });
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('.table-guests li.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchGuest(e.target.value);
+        });
+
+        // Scroll to top button
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
+
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Initialize
+        renderAllTables();
+    </script>
+</body>
+</html>
