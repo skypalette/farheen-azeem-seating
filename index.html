@@ -117,7 +117,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 4px;
-            background: var(--gold);
+            background: var(--accent);
             transform: scaleX(0);
             transition: transform 0.35s ease;
         }
@@ -138,7 +138,7 @@
         }
 
         .wedding-card-names .amp {
-            color: var(--gold);
+            color: var(--accent);
             font-style: italic;
         }
 
@@ -164,7 +164,7 @@
         }
 
         .landing-footer a {
-            color: var(--gold);
+            color: var(--accent);
             text-decoration: none;
         }
 
@@ -366,12 +366,18 @@
         .multiple-results { display: flex; flex-direction: column; gap: 12px; }
 
         .multiple-result-item {
+            display: block;
+            width: 100%;
+            text-align: left;
             background: white;
             border-radius: 12px;
             padding: 20px;
             border: 1px solid rgba(184, 134, 11, 0.15);
             cursor: pointer;
             transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
         }
 
         .multiple-result-item:hover {
@@ -534,7 +540,7 @@
         <div class="landing-logo">Sky Palette × Luxury Events</div>
         <h1 class="landing-title">Seating Charts</h1>
         <div class="wedding-cards" id="weddingCards"></div>
-        <p class="landing-footer">Hosted by <a href="https://www.skypalettetech.com/" target="_blank">Sky Palette</a> in partnership with <a href="https://luxuryeventdesign.com/" target="_blank">Luxury Events</a></p>
+        <p class="landing-footer">Hosted by <a href="https://www.skypalettetech.com/" target="_blank" rel="noopener noreferrer">Sky Palette</a> in partnership with <a href="https://luxuryeventdesign.com/" target="_blank" rel="noopener noreferrer">Luxury Events</a></p>
     </div>
 
     <!-- ==================== SEATING CHART PAGE ==================== -->
@@ -569,7 +575,7 @@
         </div>
     </div>
 
-    <button class="scroll-top" id="scrollTop">↑</button>
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
 
     <script>
     /* ==========================================================================
@@ -681,9 +687,8 @@
     // Apply theme CSS variables
     function applyTheme(theme) {
         const root = document.documentElement;
-        if (!theme) return;
-        const a = theme.accent || '#b8860b';
-        const al = theme.accentLight || '#d4a843';
+        const a = (theme && theme.accent) ? theme.accent : '#b8860b';
+        const al = (theme && theme.accentLight) ? theme.accentLight : '#d4a843';
         root.style.setProperty('--accent', a);
         root.style.setProperty('--accent-light', al);
         // Derive transparent versions
@@ -753,12 +758,23 @@
         for (const [table, guests] of Object.entries(w.tables)) {
             const card = document.createElement('div');
             card.className = 'table-card';
-            card.innerHTML = `
-                <h3 class="table-number">${table}</h3>
-                <ul class="table-guests">
-                    ${guests.map(g => `<li data-name="${g.toLowerCase()}">${g}</li>`).join('')}
-                </ul>
-            `;
+
+            const heading = document.createElement('h3');
+            heading.className = 'table-number';
+            heading.textContent = table;
+
+            const list = document.createElement('ul');
+            list.className = 'table-guests';
+
+            for (const g of guests) {
+                const li = document.createElement('li');
+                li.dataset.name = g.toLowerCase();
+                li.textContent = g;
+                list.appendChild(li);
+            }
+
+            card.appendChild(heading);
+            card.appendChild(list);
             grid.appendChild(card);
         }
 
@@ -786,42 +802,69 @@
         });
 
         clearHighlights();
+        container.innerHTML = '';
 
         if (unique.length === 0) {
-            container.innerHTML = `
-                <div class="result not-found">
-                    No guest found matching "${query}".<br>
-                    <small>Try searching by first or last name.</small>
-                </div>`;
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result not-found';
+            const message = document.createElement('p');
+            message.textContent = `No guest found matching "${query}".`;
+            const hint = document.createElement('small');
+            hint.textContent = 'Try searching by first or last name.';
+            resultDiv.appendChild(message);
+            resultDiv.appendChild(hint);
+            container.appendChild(resultDiv);
         } else if (unique.length === 1) {
             const m = unique[0];
-            container.innerHTML = `
-                <div class="result found">
-                    <p class="result-name">${m.name}</p>
-                    <p class="result-table-label">Your table</p>
-                    <p class="result-table">${m.table}</p>
-                </div>`;
+            showFoundResult(container, m.name, m.table);
             highlightGuest(m.name.toLowerCase());
         } else {
-            container.innerHTML = `
-                <div class="result multiple-results">
-                    ${unique.map(m => `
-                        <div class="multiple-result-item" onclick="selectGuest('${m.name.replace(/'/g,"\\'")}', '${m.table.replace(/'/g,"\\'")}')">
-                            <span class="result-name">${m.name}</span>
-                            <span class="result-table-label"> — ${m.table}</span>
-                        </div>`).join('')}
-                </div>`;
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result multiple-results';
+            unique.forEach(m => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'multiple-result-item';
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'result-name';
+                nameSpan.textContent = m.name;
+                const tableSpan = document.createElement('span');
+                tableSpan.className = 'result-table-label';
+                tableSpan.textContent = ' — ' + m.table;
+                btn.appendChild(nameSpan);
+                btn.appendChild(tableSpan);
+                btn.addEventListener('click', function () {
+                    selectGuest(m.name, m.table);
+                });
+                resultDiv.appendChild(btn);
+            });
+            container.appendChild(resultDiv);
             unique.forEach(m => highlightGuest(m.name.toLowerCase()));
         }
     }
 
+    function showFoundResult(container, name, table) {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result found';
+        const nameP = document.createElement('p');
+        nameP.className = 'result-name';
+        nameP.textContent = name;
+        const labelP = document.createElement('p');
+        labelP.className = 'result-table-label';
+        labelP.textContent = 'Your table';
+        const tableP = document.createElement('p');
+        tableP.className = 'result-table';
+        tableP.textContent = table;
+        resultDiv.appendChild(nameP);
+        resultDiv.appendChild(labelP);
+        resultDiv.appendChild(tableP);
+        container.appendChild(resultDiv);
+    }
+
     function selectGuest(name, table) {
-        document.getElementById('resultContainer').innerHTML = `
-            <div class="result found">
-                <p class="result-name">${name}</p>
-                <p class="result-table-label">Your table</p>
-                <p class="result-table">${table}</p>
-            </div>`;
+        const container = document.getElementById('resultContainer');
+        container.innerHTML = '';
+        showFoundResult(container, name, table);
         clearHighlights();
         highlightGuest(name.toLowerCase());
     }
@@ -852,6 +895,7 @@
             seating.classList.remove('active');
             backBtn.classList.remove('visible');
             document.title = 'Wedding Seating Charts | Sky Palette';
+            applyTheme(null);
             renderLanding();
         }
     }
