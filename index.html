@@ -570,7 +570,7 @@
 <body>
 
     <!-- ==================== LANDING PAGE ==================== -->
-    <div class="landing-page" id="landingPage">
+    <div class="landing-page hidden" id="landingPage">
         <div class="landing-logo">Sky Palette × Luxury Events</div>
         <h1 class="landing-title">Seating Charts</h1>
         <div class="wedding-cards" id="weddingCards"></div>
@@ -941,6 +941,7 @@
             document.title = 'Wedding Seating Charts | Sky Palette';
             applyTheme(null);
             renderLanding();
+            window.scrollTo({ top: 0 });
         } else if (hash && weddings[hash]) {
             // Guest view — show specific wedding only
             seating.classList.add('active');
@@ -955,10 +956,14 @@
             // Invalid hash — show not-found
             notFound.classList.add('active');
             document.title = 'Event Not Found | Sky Palette';
+            applyTheme(null);
+            window.scrollTo({ top: 0 });
         } else {
             // No hash at all — show not-found
             notFound.classList.add('active');
             document.title = 'Event Not Found | Sky Palette';
+            applyTheme(null);
+            window.scrollTo({ top: 0 });
         }
     }
 
